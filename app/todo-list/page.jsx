@@ -36,11 +36,16 @@ const TodoList = ({ tasks, onTaskDeleted, onTaskToggled, onEditStart }) => {
     };
 
     const formatDate = (dateString) => {
+        if (!dateString) return '';
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     };
 
-    if (tasks.length === 0) {
+    // **ফিক্স ১: tasks undefined হলে empty array ধরে নিবে**
+    const safeTasks = tasks || [];
+    
+    // **ফিক্স ২: length চেক করার আগে safeTasks ব্যবহার করুন**
+    if (safeTasks.length === 0) {
         return (
             <div className="bg-white rounded-xl shadow-lg p-12 text-center">
                 <div className="text-6xl mb-4">📋</div>
@@ -52,7 +57,7 @@ const TodoList = ({ tasks, onTaskDeleted, onTaskToggled, onEditStart }) => {
 
     return (
         <div className="space-y-3">
-            {tasks.map((task) => (
+            {safeTasks.map((task) => (
                 <div
                     key={task.id}
                     className={`group bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 p-5 border-l-4 ${
@@ -89,7 +94,7 @@ const TodoList = ({ tasks, onTaskDeleted, onTaskToggled, onEditStart }) => {
                                 )}
                             </div>
                             
-                            {/* Description - dangerouslySetInnerHTML ছাড়া */}
+                            {/* Description */}
                             <div className={`prose prose-sm max-w-none ${
                                 task.completed ? 'text-gray-400' : 'text-gray-600'
                             }`}>
